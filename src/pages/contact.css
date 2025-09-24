@@ -1,0 +1,18 @@
+.plistaC {
+    margin: 0;
+    padding: 0;
+    color: rgb(118, 117, 117);
+    font-weight: bold
+}
+
+.letraS {
+    font-size: 0.8rem;
+}
+
+.letraSm {
+    font-size: 0.7rem;
+}
+
+.ii {
+    color: rgb(118, 117, 117);
+}
