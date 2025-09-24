@@ -2,17 +2,25 @@
     margin: 0;
     padding: 0;
     color: rgb(118, 117, 117);
-    font-weight: bold
 }
 
+.letraM {
+    font-weight: 600;
+}
 .letraS {
     font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .letraSm {
     font-size: 0.7rem;
+    font-weight: 600;
 }
 
 .ii {
     color: rgb(118, 117, 117);
+}
+
+i:hover {
+    cursor: pointer;
 }

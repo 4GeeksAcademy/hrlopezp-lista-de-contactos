@@ -5,7 +5,7 @@ import {
     createRoutesFromElements,
     Route,
 } from "react-router-dom";
-import { Layout } from "./pages/Layout";
+import { Layout } from "./Layout";
 import { Contact } from "./pages/Contact";
 import { AddContact } from "./pages/AddContact";
 

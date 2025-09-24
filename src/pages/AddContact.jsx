@@ -1,23 +1,24 @@
 import { useState, useEffect } from "react"
-import "./contact.css"
+import "../style/contact.css"
 import toast, { Toaster } from 'react-hot-toast';
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { getAllContacts } from "../services/apiLista";
+import { useParams } from "react-router-dom";
 
 
 const notify = () => toast('Debes llenar todos los campos');
+const actualizado = () => toast("Contacto actualizado con éxito, revisa la lista de contactos")
 
 const datosContacto = { name: "", phone: "", email: "", address: "" }
 const URL_base = ("https://playground.4geeks.com/contact/agendas/")
 
 export function AddContact() {
 
-    const {store, dispatch} = useGlobalReducer()
-
+    const { store, dispatch } = useGlobalReducer()
     const [escribircontacto, setEscribirContacto] = useState(datosContacto)
+    const { theid } = useParams()
 
-    const [editarContactoId, setEditarContactoId] = useState(null);
 
 
     //Al presionar las teclas en los inputs
@@ -38,8 +39,8 @@ export function AddContact() {
             return;
         }
 
-        if (editarContactoId) {
-            handleEdit(editarContactoId);
+        if (theid) {
+            handleEdit();
         } else {
             handleSubmit();
         }
@@ -47,42 +48,10 @@ export function AddContact() {
 
 
     //Si se agrega un contacto nuevo
-   const handleSubmit = async () => {
-           try {
-               const response = await fetch(`${URL_base}hectorlopez/contacts`, {
-                   method: "POST",
-                   headers: {
-                       "Content-Type": "application/json"
-                   },
-                   body: JSON.stringify(escribircontacto)
-               })
-   
-               if (response.ok) {
-                   const responseLista = await getAllContacts()
-                   dispatch({
-                       type: "SET_CONTACTS",
-                       payload: responseLista
-                   })
-               }
-               setEscribirContacto(datosContacto)
-           } catch (error) {
-               console.log(error)
-           }
-       }
-
-
-    // Subir el formulario al editar y darle el mismo ID
-    const iniciarEdicion = (contacto) => {
-        setEscribirContacto(contacto);
-        setEditarContactoId(contacto.id);
-    };
-
-
-    //Para actualizar el contatco con el mismo id
-    const handleEdit = async (id) => {
+    const handleSubmit = async () => {
         try {
-            const response = await fetch(`${URL_base}hectorlopez/contacts/${id}`, {
-                method: "PUT",
+            const response = await fetch(`${URL_base}hectorlopez/contacts`, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -90,15 +59,59 @@ export function AddContact() {
             })
 
             if (response.ok) {
-                getAllContacts()
+                const responseLista = await getAllContacts()
+                dispatch({
+                    type: "SET_CONTACTS",
+                    payload: responseLista
+                })
             }
-            setEditarContactoId(null); // volver el id inicial
-            setEscribirContacto(datosContacto) // Colocar el formulario vacío de nuevo
+            setEscribirContacto(datosContacto)
         } catch (error) {
             console.log(error)
         }
     }
 
+
+    //Si vamos a editar un contacto 
+       const handleEdit = async () => {
+        try {
+            const response = await fetch(`${URL_base}hectorlopez/contacts/${theid}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(escribircontacto),
+            });
+            if (response.ok) {
+                const responseLista = await getAllContacts();
+                dispatch({
+                    type: "SET_CONTACTS",
+                    payload: responseLista,
+                });
+                actualizado();
+            }
+            setEscribirContacto(datosContacto)
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    //    const getContacts =async ()=> {
+    //     let editarContacto= store.contactosGuardados.find((item) => item.id == theid)
+    //       setEscribirContacto(editarContacto)
+    //    }
+
+    useEffect(() => {
+        if (theid) {
+            const editarContacto = store.contactosGuardados.find((item) => item.id == theid
+            );
+            if (editarContacto) {
+                setEscribirContacto(editarContacto);
+            }
+        } else {
+            setEscribirContacto(datosContacto);
+        }
+    }, [theid, store.contactosGuardados]);
 
 
     return (
@@ -106,7 +119,7 @@ export function AddContact() {
             <div className="container my-5">
                 <div className="row justify-content-center">
                     <div className="col-12 col-md-8">
-                        <h1 className="text-center">Add a new contact</h1>
+                        <h1 className="text-center">Agregar nuevo contacto</h1>
                         <Toaster />
                         <form onSubmit={handleFormSubmit}>
                             <div>
@@ -155,14 +168,14 @@ export function AddContact() {
                             </div>
                             <div>
                                 <button
-                                    className="btn btn-primary w-100 mt-2"
+                                    className={`btn w-100 mt-2 ${theid ? "btn-success": "btn-primary"}`}
                                 >
-                                    Save Contact"
+                                   {theid ? "Actualizar contacto" : "Guardar contacto"}
                                 </button>
                             </div>
 
-                            <div className="mb-5">
-                               <Link to={"/"}> or get back to contacts</Link>
+                            <div className="mb-5 mt-3">
+                                <Link to={"/"}> Regresar a la lista de contactos</Link>
                             </div>
                         </form>
                     </div>

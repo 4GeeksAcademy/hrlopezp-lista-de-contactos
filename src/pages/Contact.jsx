@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import "./contact.css"
+import "../style/contact.css"
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { getAllContacts } from "../services/apiLista";
@@ -12,7 +12,6 @@ const URL_base = ("https://playground.4geeks.com/contact/agendas/")
 export function Contact() {
 
     const { store, dispatch } = useGlobalReducer()
-    const [escribircontacto, setEscribirContacto] = useState(datosContacto)
    
 
     //Borrar un contacto
@@ -42,7 +41,7 @@ export function Contact() {
                         <div className="d-flex justify-content-end">
                             <Link to={"/add-contact"}
                                 className="btn btn-success mb-3"
-                            >Add new contact
+                            >Agregar nuevo contacto
                             </Link>
                         </div>
                         {
@@ -58,7 +57,7 @@ export function Contact() {
                                             <h5>{item.name}</h5>
                                             <span className="d-flex">
                                                 <i className="fa-solid fa-location-dot d-flex align-items-center me-2 ii"></i>
-                                                <p className="plistaC">{item.address}</p>
+                                                <p className="plistaC letraM">{item.address}</p>
                                             </span>
                                             <span className="d-flex">
                                                 <i className="fa-solid fa-phone-flip d-flex align-items-center me-3 ii"></i>
